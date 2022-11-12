@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\api\v1\PostCollection;
+use App\Http\Resources\api\v1\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -17,7 +18,12 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::paginate();
+
         return new PostCollection($posts);
+        // return response([
+        //     'message' => 'Success',
+        //     'data' => new PostCollection($posts)
+        // ], 200);
     }
 
     /**
@@ -39,7 +45,11 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        return new PostResource($post);
+        // return response([
+        //     'message' => 'Success',
+        //     new PostResource($post->with('category'))
+        // ]);
     }
 
     /**
