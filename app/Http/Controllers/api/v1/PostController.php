@@ -34,7 +34,16 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'category_id' => 'required|integer',
+            'title' => 'required|string',
+            'content' => 'required|string',
+            'image' => 'nullable|string',
+        ]);
+
+        $post = Post::create($validated);
+
+        return new PostResource($post);
     }
 
     /**

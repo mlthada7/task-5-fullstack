@@ -21,8 +21,7 @@ class PostFactory extends Factory
         return [
             'title' => $this->faker->sentence(),
             'content' => $this->faker->text(),
-            'image' => $this->faker->imageUrl(360, 360, 'animals', true, 'cats'),
-            'user_id' => mt_rand(1, 10),
+            'image' => $this->faker->imageUrl(360, 360, '', true, ''),
             'category_id' => mt_rand(1, 3),
         ];
     }
