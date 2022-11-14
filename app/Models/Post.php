@@ -9,6 +9,12 @@ class Post extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'title',
+        'content',
+        'image'
+    ];
+
     /**
      * Get the category that owns the Post
      *

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\api\v1\CategoryCollection;
+use App\Http\Resources\api\v1\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -28,7 +29,13 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string',
+        ]);
+
+        $category = Category::create($validated);
+
+        return new CategoryResource($category);
     }
 
     /**
@@ -39,7 +46,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        return new CategoryResource($category->loadMissing('posts'));
     }
 
     /**
@@ -51,7 +58,11 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string',
+        ]);
+
+        $category->update($validated);
     }
 
     /**
@@ -62,6 +73,6 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
     }
 }

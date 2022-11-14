@@ -9,6 +9,10 @@ class Category extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name'
+    ];
+
     /**
      * Get all of the posts for the Category
      *
