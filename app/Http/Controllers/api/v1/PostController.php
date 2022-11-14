@@ -70,7 +70,14 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        $validated = $request->validate([
+            'category_id' => 'required|integer',
+            'title' => 'required|string',
+            'content' => 'required|string',
+            'image' => 'nullable|string',
+        ]);
+
+        $post->update($validated);
     }
 
     /**
@@ -81,6 +88,6 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post->delete();
     }
 }
