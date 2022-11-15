@@ -20,10 +20,6 @@ class PostController extends Controller
         $posts = Post::paginate();
 
         return new PostCollection($posts);
-        // return response([
-        //     'message' => 'Success',
-        //     'data' => new PostCollection($posts)
-        // ], 200);
     }
 
     /**
@@ -55,10 +51,6 @@ class PostController extends Controller
     public function show(Post $post)
     {
         return new PostResource($post);
-        // return response([
-        //     'message' => 'Success',
-        //     new PostResource($post->with('category'))
-        // ]);
     }
 
     /**
@@ -78,6 +70,8 @@ class PostController extends Controller
         ]);
 
         $post->update($validated);
+
+        return response(['message' => 'Post updated successfully']);
     }
 
     /**
@@ -89,5 +83,7 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         $post->delete();
+
+        return response(['message' => 'Post deleted successfully']);
     }
 }

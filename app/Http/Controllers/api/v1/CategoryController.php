@@ -63,6 +63,8 @@ class CategoryController extends Controller
         ]);
 
         $category->update($validated);
+
+        return response(['message' => 'Category updated successfully']);
     }
 
     /**
@@ -74,5 +76,7 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
+
+        return response(['message' => 'Category deleted successfully']);
     }
 }
