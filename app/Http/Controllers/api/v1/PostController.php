@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\api\v1;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\api\v1\PostCollection;
-use App\Http\Resources\api\v1\PostResource;
+use Exception;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use App\Http\Resources\api\v1\PostResource;
+use App\Http\Resources\api\v1\PostCollection;
+use App\Http\Controllers\api\v1\BaseController;
 
-class PostController extends Controller
+class PostController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -19,7 +20,9 @@ class PostController extends Controller
     {
         $posts = Post::paginate();
 
-        return new PostCollection($posts);
+        $data = new PostCollection($posts);
+
+        return $this->sendResponse($data, 'Posts retrieved successfully.');
     }
 
     /**
@@ -37,9 +40,13 @@ class PostController extends Controller
             'image' => 'nullable|string',
         ]);
 
-        $post = Post::create($validated);
-
-        return new PostResource($post);
+        try {
+            $post = Post::create($validated);
+            $data = new PostResource($post);
+            return $this->sendResponse($data, 'A post has been successfully created.');
+        } catch (Exception $e) {
+            return $this->sendError('Failed to create post.');
+        }
     }
 
     /**
@@ -48,9 +55,17 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $post)
+    public function show($id)
     {
-        return new PostResource($post);
+        $post = Post::find($id);
+
+        if (is_null($post)) {
+            return $this->sendError('Post not found.');
+        }
+
+        $data = new PostResource($post);
+
+        return $this->sendResponse($data, 'Post retrieved successfully.');
     }
 
     /**
@@ -69,9 +84,13 @@ class PostController extends Controller
             'image' => 'nullable|string',
         ]);
 
-        $post->update($validated);
-
-        return response(['message' => 'Post updated successfully']);
+        try {
+            $post->update($validated);
+            $data = new PostResource($post);
+            return $this->sendResponse($data, 'Post updated successfully.');
+        } catch (Exception $e) {
+            return $this->sendError('Failed to update post.');
+        }
     }
 
     /**
@@ -82,8 +101,11 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        $post->delete();
-
-        return response(['message' => 'Post deleted successfully']);
+        try {
+            $post->delete();
+            return $this->sendResponse([], 'The post successfully deleted.');
+        } catch (Exception $e) {
+            return $this->sendError('Post deleted successfully.', ['error' => 'eroradfasdf']);
+        }
     }
 }

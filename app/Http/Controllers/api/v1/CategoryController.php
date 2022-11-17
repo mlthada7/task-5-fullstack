@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\api\v1;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\api\v1\BaseController;
 use App\Http\Resources\api\v1\CategoryCollection;
 use App\Http\Resources\api\v1\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+class CategoryController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +18,10 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::with('posts')->get();
-        return new CategoryCollection($categories);
+
+        $data = new CategoryCollection($categories);
+
+        return $this->sendResponse($data, 'Category retrived successfully.');
     }
 
     /**
@@ -35,7 +38,9 @@ class CategoryController extends Controller
 
         $category = Category::create($validated);
 
-        return new CategoryResource($category);
+        $data =  new CategoryResource($category);
+
+        return $this->sendResponse($data, 'Category created successfully.');
     }
 
     /**
@@ -44,9 +49,17 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function show(Category $category)
+    public function show($id)
     {
-        return new CategoryResource($category->loadMissing('posts'));
+        $category = Category::find($id);
+
+        if (is_null($category)) {
+            return $this->sendError('Category not found.');
+        }
+
+        $data = new CategoryResource($category->loadMissing('posts'));
+
+        return $this->sendResponse($data, 'Category retrieved successfully.');
     }
 
     /**
@@ -64,7 +77,9 @@ class CategoryController extends Controller
 
         $category->update($validated);
 
-        return response(['message' => 'Category updated successfully']);
+        $data = new CategoryResource($category);
+
+        return $this->sendResponse($data, 'Category updated successfully.');
     }
 
     /**
@@ -77,6 +92,6 @@ class CategoryController extends Controller
     {
         $category->delete();
 
-        return response(['message' => 'Category deleted successfully']);
+        return $this->sendResponse([], 'Category deleted successfully.');
     }
 }

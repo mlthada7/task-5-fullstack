@@ -18,8 +18,9 @@ class CategoryResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'created_at' => $this->created_at,
-            'posts' => PostResource::collection($this->whenLoaded('posts'))
+            'posts' => PostResource::collection($this->whenLoaded('posts')),
+            // 'created_at' => date_format($this->created_at, "Y/m/d H:i:s"),
+            // 'updated_at' => date_format($this->updated_at, "Y/m/d H:i:s"),
         ];
     }
 }
