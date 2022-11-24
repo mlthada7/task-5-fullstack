@@ -4,17 +4,18 @@ namespace App\Http\Controllers\api\v1;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Passport\TokenRepository;
+use App\Http\Controllers\api\v1\BaseController;
 
-class PassportAuthController extends Controller
+class PassportAuthController extends BaseController
 {
     public function register(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required|string',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required',
         ]);
 
@@ -22,12 +23,10 @@ class PassportAuthController extends Controller
 
         $user = User::create($validated);
 
-        $accessToken = $user->createToken('access_token')->accessToken;
+        $data['name'] = $user->name;
+        $data['access_token'] = $user->createToken('access_token')->accessToken;
 
-        return response([
-            'user' => $user,
-            'access_token' => $accessToken
-        ], 200);
+        return $this->sendResponse($data, 'User register successfully.');
     }
 
     public function login(Request $request)
@@ -38,14 +37,25 @@ class PassportAuthController extends Controller
         ]);
 
         if (!Auth::attempt($loginCredential)) {
-            return response(['message' => 'Invalid login credentials']);
+            return $this->sendError('Invalid login credentials.');
         }
 
         $user = Auth::user();
-        $accessToken = $user->createToken('access_token')->accessToken;
 
-        return response([
-            'access_token' => $accessToken
-        ]);
+        $data['name'] = $user->name;
+        $data['access_token'] = $user->createToken('access_token')->accessToken;
+
+        return $this->sendResponse($data, 'User login successfully.');
+    }
+
+    public function logout(Request $request)
+    {
+        $accessToken = auth()->user()->token();
+        // $token = $request->user()->tokens;
+        dd($accessToken);
+
+        $tokenRepository = app(TokenRepository::class);
+        // Revoke an access token...
+        $tokenRepository->revokeAccessToken($accessToken);
     }
 }

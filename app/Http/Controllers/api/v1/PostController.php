@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\v1;
 use Exception;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\api\v1\PostResource;
 use App\Http\Resources\api\v1\PostCollection;
 use App\Http\Controllers\api\v1\BaseController;
@@ -35,17 +36,21 @@ class PostController extends BaseController
     {
         $validated = $request->validate([
             'category_id' => 'required|integer',
+            // 'user_id' => 'required|integer',
             'title' => 'required|string',
             'content' => 'required|string',
             'image' => 'nullable|string',
         ]);
+
+        $validated['user_id'] = Auth::user()->id;
+        // dd($validated['user_id']);
 
         try {
             $post = Post::create($validated);
             $data = new PostResource($post);
             return $this->sendResponse($data, 'A post has been successfully created.');
         } catch (Exception $e) {
-            return $this->sendError('Failed to create post.');
+            return $this->sendError($e->getMessage());
         }
     }
 

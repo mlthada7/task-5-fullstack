@@ -27,4 +27,5 @@ Route::post('login', [PassportAuthController::class, 'login']);
 Route::middleware('auth:api')->prefix('v1')->group(function () {
     Route::apiResource('posts', PostController::class);
     Route::apiResource('categories', CategoryController::class);
+    Route::post('logout', [PassportAuthController::class, 'logout']);
 });

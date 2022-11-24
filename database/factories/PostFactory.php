@@ -23,6 +23,7 @@ class PostFactory extends Factory
             'content' => $this->faker->text(),
             'image' => $this->faker->imageUrl(360, 360, '', true, ''),
             'category_id' => mt_rand(1, 3),
+            'user_id' => mt_rand(1, 2),
         ];
     }
 }
