@@ -42,15 +42,16 @@ class PostController extends BaseController
             'image' => 'nullable|string',
         ]);
 
-        $validated['user_id'] = Auth::user()->id;
+        $validated['user_id'] = auth()->user()->id;
         // dd($validated['user_id']);
 
+        // catch jika category_id tidak ditemukan
         try {
             $post = Post::create($validated);
             $data = new PostResource($post);
             return $this->sendResponse($data, 'A post has been successfully created.');
         } catch (Exception $e) {
-            return $this->sendError($e->getMessage());
+            return $this->sendError('Fail to create post');
         }
     }
 

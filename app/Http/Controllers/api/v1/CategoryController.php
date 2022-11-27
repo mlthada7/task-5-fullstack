@@ -36,6 +36,8 @@ class CategoryController extends BaseController
             'name' => 'required|string',
         ]);
 
+        $validated['user_id'] = auth()->user()->id;
+
         $category = Category::create($validated);
 
         $data =  new CategoryResource($category);
@@ -90,8 +92,11 @@ class CategoryController extends BaseController
      */
     public function destroy(Category $category)
     {
-        $category->delete();
-
-        return $this->sendResponse([], 'Category deleted successfully.');
+        try {
+            $category->delete();
+            return $this->sendResponse([], 'Category deleted successfully.');
+        } catch (\Exception $e) {
+            return $this->sendError('fail', ['error' => 'eroradfasdf']);
+        }
     }
 }

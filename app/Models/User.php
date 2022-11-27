@@ -47,8 +47,18 @@ class User extends Authenticatable
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function post()
+    public function posts()
     {
         return $this->hasMany(Post::class);
+    }
+
+    /**
+     * Get all of the categories for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function categories()
+    {
+        return $this->hasMany(Category::class);
     }
 }

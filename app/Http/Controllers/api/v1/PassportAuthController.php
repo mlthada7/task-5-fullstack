@@ -50,12 +50,17 @@ class PassportAuthController extends BaseController
 
     public function logout(Request $request)
     {
-        $accessToken = auth()->user()->token();
-        // $token = $request->user()->tokens;
-        dd($accessToken);
+        $token = $request->user()->token();
+        $token->revoke();
+        $token->delete();
 
-        $tokenRepository = app(TokenRepository::class);
-        // Revoke an access token...
-        $tokenRepository->revokeAccessToken($accessToken);
+        // $accessToken = auth()->user()->token();
+        // $token = $request->user()->tokens->find($accessToken);
+        // $token->revoke();
+
+        // $tokenRepository = app(TokenRepository::class);
+        // $tokenRepository->revokeAccessToken($token);
+
+        return $this->sendResponse($token, 'Successfully logout');
     }
 }

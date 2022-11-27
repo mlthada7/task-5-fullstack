@@ -17,15 +17,16 @@ use App\Http\Controllers\api\v1\PassportAuthController;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 Route::post('register', [PassportAuthController::class, 'register']);
 Route::post('login', [PassportAuthController::class, 'login']);
+Route::post('logout', [PassportAuthController::class, 'logout'])->middleware(['auth:api', 'verified']);
+
 
 Route::middleware('auth:api')->prefix('v1')->group(function () {
     Route::apiResource('posts', PostController::class);
     Route::apiResource('categories', CategoryController::class);
-    Route::post('logout', [PassportAuthController::class, 'logout']);
 });
