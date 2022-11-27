@@ -64,6 +64,7 @@ class PostController extends BaseController
     public function show($id)
     {
         $post = Post::find($id);
+        // dd($post);
 
         if (is_null($post)) {
             return $this->sendError('Post not found.');
@@ -105,13 +106,15 @@ class PostController extends BaseController
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post)
+    public function destroy($id)
     {
-        try {
-            $post->delete();
-            return $this->sendResponse([], 'The post successfully deleted.');
-        } catch (Exception $e) {
-            return $this->sendError('Post deleted successfully.', ['error' => 'eroradfasdf']);
+        $post = Post::find($id);
+
+        if (is_null($post)) {
+            return $this->sendError('Post not found.');
         }
+
+        $post->delete();
+        return $this->sendResponse([], 'The post successfully deleted.');
     }
 }

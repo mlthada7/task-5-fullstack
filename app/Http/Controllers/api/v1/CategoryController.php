@@ -90,13 +90,15 @@ class CategoryController extends BaseController
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy($id)
     {
-        try {
-            $category->delete();
-            return $this->sendResponse([], 'Category deleted successfully.');
-        } catch (\Exception $e) {
-            return $this->sendError('fail', ['error' => 'eroradfasdf']);
+        $category = Category::find($id);
+
+        if (is_null($category)) {
+            return $this->sendError('Category not found.');
         }
+
+        $category->delete();
+        return $this->sendResponse([], 'The category successfully deleted.');
     }
 }
