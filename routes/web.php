@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,11 +17,19 @@ use App\Http\Controllers\PostController;
 |
 */
 
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/posts');
 });
 
 Auth::routes();
 
-Route::get('/home', [HomeController::class, 'index'])->name('home');
-Route::get('/posts', [PostController::class, 'index'])->name('posts.index')->middleware('auth');
+// Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::middleware(['auth'])->group(function () {
+    Route::resource('/posts', PostController::class);
+    Route::resource('/categories', CategoryController::class);
+});
+
+// Route::get('/posts', [PostController::class, 'index'])->name('posts.index')->middleware('auth');

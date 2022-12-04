@@ -1,4 +1,4 @@
-@extends('recipes.layouts.boilerplate')
+@extends('blog.layouts.boilerplate')
 
 @section('content')
 

@@ -14,7 +14,12 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories = Category::paginate(6);
+
+        return view('blog.category.index', [
+            'title' => 'All Categories',
+            'categories' => $categories
+        ]);
     }
 
     /**
@@ -24,7 +29,9 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('blog.category.create', [
+            'title' => 'Create New Category'
+        ]);
     }
 
     /**
@@ -35,7 +42,15 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|unique:categories,name',
+        ]);
+
+        $validated['user_id'] = auth()->user()->id;
+
+        $category = Category::create($validated);
+
+        return redirect()->route('categories.index')->with(['success' => "Category $category->name is successfully saved."]);
     }
 
     /**
@@ -46,7 +61,10 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        // return view('blog.category.show', [
+        //     'title' => $category->title,
+        //     'category' => $category
+        // ]);
     }
 
     /**
@@ -57,7 +75,14 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        if (auth()->user()->id !== $category->user->id) {
+            return redirect()->back()->with('status', 'Unauthorized');
+        }
+
+        return view('blog.category.edit', [
+            'title' => "Edit $category->title",
+            'category' => $category,
+        ]);
     }
 
     /**
@@ -69,7 +94,15 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|unique:categories,name',
+        ]);
+
+        $validated['user_id'] = auth()->user()->id;
+
+        $category = Category::where('id', $category->id)->update($validated);
+
+        return redirect()->route('categories.index')->with(['success' => "The category is successfully updated."]);
     }
 
     /**
@@ -80,6 +113,8 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+
+        return redirect()->route('categories.index')->with(['success' => "Category $category->name has been deleted!"]);
     }
 }

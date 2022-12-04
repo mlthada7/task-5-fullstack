@@ -1,37 +1,56 @@
-<nav class="navbar navbar-expand-lg navbar-dark">
+<nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm">
     <div class="container">
-        <a class="navbar-brand fs-1" href="{{ route('recipes.index') }}">Resepku</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <a class="navbar-brand" href="{{ url('/posts') }}">
+            MyBlog
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <!-- Left Side Of Navbar -->
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('posts.index') ? 'active' : '' }}" aria-current="page" href="{{ route('posts.index') }}">Posts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('categories.index') ? 'active' : '' }}" aria-current="page" href="{{ route('categories.index') }}">Categories</a>
+                </li>
+            </ul>
+
+            <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ms-auto">
+                <!-- Authentication Links -->
+                @guest
+                @if (Route::has('login'))
                 <li class="nav-item">
-                    <a class="nav-link fs-5 {{ request()->routeIs('recipes.create') ? 'active' : '' }}" aria-current="page" href="{{ route('recipes.create') }}">Tulis Resep</a>
+                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                 </li>
-                @auth
+                @endif
+
+                @if (Route::has('register'))
                 <li class="nav-item">
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <a href="{{ route('logout') }}" class="nav-link fs-5" onclick="event.preventDefault();
-                                this.closest('form').submit();">Logout</a>
-                    </form>
+                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                 </li>
-                {{-- <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        {{ auth()->user()->name }}
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="/dashboard"><i class="bi bi-layout-text-sidebar-reverse"></i>
-                            My Dashborard</a></li>
-                    <hr class="dropdown-divider">
-                    </li>
-                </ul> --}}
+                @endif
                 @else
-                <li class="nav-item">
-                    <a href="/login" class="nav-link"><i class="bi bi-box-arrow-in-right"></i> Login</a>
+                <li class="nav-item dropdown">
+                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                        Hi, {{ Auth::user()->name }}!
+                    </a>
+
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                             document.getElementById('logout-form').submit();">
+                            {{ __('Logout') }}
+                        </a>
+
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
+                    </div>
                 </li>
-                @endauth
+                @endguest
             </ul>
         </div>
     </div>
