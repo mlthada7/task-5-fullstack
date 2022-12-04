@@ -106,12 +106,17 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|unique:posts,title',
+        $rules = [
             'category_id' => 'required',
             'content' => 'required|string',
             'image' => 'image|file|max:2048'
-        ]);
+        ];
+
+        if ($request->title !== $post->title) {
+            $rules['title'] = 'required|string|unique:posts,title';
+        }
+
+        $validated = $request->validate($rules);
 
         if ($request->file('image')) {
             if ($request->oldImage) {
@@ -122,7 +127,7 @@ class PostController extends Controller
 
         $validated['user_id'] = auth()->user()->id;
 
-        $post = Post::where('id', $post->id)->update($validated);
+        $post->update($validated);
 
         return redirect()->route('posts.index')->with(['success' => "The post is successfully updated."]);
     }

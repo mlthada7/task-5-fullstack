@@ -23,8 +23,6 @@
                 <div class="position-absolute px-3 py-2 text-white" style="background-color: rgba(0, 0, 0, 0.7)">
                     <a href="/posts?category={{ $post->category->id }}" class="text-white text-decoration-none">{{ $post->category->name }}</a>
                 </div>
-                {{-- <img src="{{ asset('storage/'.$post->image) }}" class="img-fluid" alt=""> --}}
-
                 @if($post->image)
                 <img src="{{ asset('storage/'.$post->image) }}" class="img-fluid" alt="">
                 @else
@@ -38,10 +36,6 @@
                             By. <a href="/posts?author={{ $post->user->name }}" class="text-decoration-none">{{ $post->user->name }}</a> {{ $post->created_at->diffForHumans() }}
                         </small>
                     </p>
-
-                    {{-- <p class="card-text">{{ $post->excerpt }}</p> --}}
-
-                    {{-- <a href="/posts/{{ $post->slug }}" class="text-decoration-none btn btn-primary">Read More</a> --}}
                     <a href="{{ route('posts.show', $post->id) }}" class="text-decoration-none btn btn-outline-primary">Read More</a>
                 </div>
             </div>

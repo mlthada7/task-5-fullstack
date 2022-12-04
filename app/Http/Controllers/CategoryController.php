@@ -94,13 +94,19 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|unique:categories,name',
-        ]);
+        $rules = [
+            'name' => 'required|string',
+        ];
+
+        if ($request->name !== $category->name) {
+            $rules['name'] = 'required|string|unique:categories,name';
+        }
+
+        $validated = $request->validate($rules);
 
         $validated['user_id'] = auth()->user()->id;
 
-        $category = Category::where('id', $category->id)->update($validated);
+        $category->update($validated);
 
         return redirect()->route('categories.index')->with(['success' => "The category is successfully updated."]);
     }

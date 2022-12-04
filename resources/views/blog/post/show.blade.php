@@ -12,7 +12,7 @@
         @endif
 
         <div style="max-height: 350px; overflow:hidden" class="mb-3">
-            <img src="{{ asset('storage/' . $post->image) }}" class="img-fluid" alt="">
+            <img src="{{ asset('storage/'.$post->image) }}" class="img-fluid" alt="">
         </div>
         <h2 class="mb-3 fw-bold">{{ $post->title }}</h2>
         <div class="mb-4">
